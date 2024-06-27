@@ -5,7 +5,7 @@ import random
 # Initialize pygame
 pygame.init()
 
-# Define colors
+# Defining colors
 white = (255, 255, 255)
 yellow = (255, 255, 102)
 black = (0, 0, 0)
@@ -14,8 +14,8 @@ green = (0, 255, 0)
 blue = (50, 153, 213)
 
 # Display dimensions
-dis_width = 600
-dis_height = 400
+dis_width = 1000
+dis_height = 600
 
 # Create display
 dis = pygame.display.set_mode((dis_width, dis_height))
@@ -23,11 +23,20 @@ pygame.display.set_caption('Snake Game')
 
 clock = pygame.time.Clock()
 snake_block = 10
-snake_speed = 15
+snake_speed = 10
 
-# Font style
-font_style = pygame.font.SysFont(None, 50)
+font_style = pygame.font.SysFont(None, 55)
 score_font = pygame.font.SysFont(None, 35)
+hackclub_font = pygame.font.SysFont(None, 25)
+
+# Loading background image
+background_img = pygame.image.load('hackclub_logo.png')  
+
+def draw_background():
+    
+    for x in range(0, dis_width, background_img.get_width()):
+        for y in range(0, dis_height, background_img.get_height()):
+            dis.blit(background_img, (x, y))
 
 def our_snake(snake_block, snake_List):
     for x in snake_List:
@@ -40,6 +49,11 @@ def your_score(score):
 def message(msg, color):
     mesg = font_style.render(msg, True, color)
     dis.blit(mesg, [dis_width / 6, dis_height / 3])
+
+# Hackclub Displaying above snake head
+def hackclub_message(x, y):
+    hackclub_text = hackclub_font.render("Hackclub", True, red)
+    dis.blit(hackclub_text, [x, y - 10])  
 
 def gameLoop():
     game_over = False
@@ -60,8 +74,8 @@ def gameLoop():
     while not game_over:
 
         while game_close == True:
-            dis.fill(blue)
-            message("You Lost! Press Q-Quit or C-Play Again", red)
+            draw_background()
+            message("You Lost! Press Q to Quit or C to Play Again", red)
             your_score(Length_of_snake - 1)
             pygame.display.update()
 
@@ -94,7 +108,8 @@ def gameLoop():
             game_close = True
         x1 += x1_change
         y1 += y1_change
-        dis.fill(blue)
+
+        draw_background()  
         pygame.draw.rect(dis, green, [foodx, foody, snake_block, snake_block])
         snake_Head = []
         snake_Head.append(x1)
@@ -109,6 +124,9 @@ def gameLoop():
 
         our_snake(snake_block, snake_List)
         your_score(Length_of_snake - 1)
+
+        if Length_of_snake > 1:
+            hackclub_message(snake_Head[0], snake_Head[1])
 
         pygame.display.update()
 
